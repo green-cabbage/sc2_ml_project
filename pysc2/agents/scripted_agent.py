@@ -90,3 +90,32 @@ class DefeatRoaches(base_agent.BaseAgent):
       return actions.FunctionCall(_SELECT_ARMY, [_SELECT_ALL])
     else:
       return actions.FunctionCall(_NO_OP, [])
+
+
+'''
+class DoNothing(base_agent.BaseAgent):
+  """An agent specifically for doing NADA """
+
+  def step(self, obs):
+    super(DoNothing, self).step(obs)
+    if _ATTACK_SCREEN in obs.observation["available_actions"]:
+      player_relative = obs.observation["screen"][_PLAYER_RELATIVE]
+      roach_y, roach_x = (player_relative == _PLAYER_HOSTILE).nonzero()
+      if not roach_y.any():
+        return actions.FunctionCall(_NO_OP, [])
+      index = numpy.argmax(roach_y)
+      target = [roach_x[index], roach_y[index]]
+      return actions.FunctionCall(_ATTACK_SCREEN, [_NOT_QUEUED, target])
+    elif _SELECT_ARMY in obs.observation["available_actions"]:
+      return actions.FunctionCall(_SELECT_ARMY, [_SELECT_ALL])
+    else:
+      return actions.FunctionCall(_NO_OP, [])
+
+
+ def step(self, obs):
+    super(RandomAgent, self).step(obs)
+    function_id = numpy.random.choice(obs.observation["available_actions"])
+    args = [[numpy.random.randint(0, size) for size in arg.sizes]
+            for arg in self.action_spec.functions[function_id].args]
+    return actions.FunctionCall(function_id, args)
+    '''
